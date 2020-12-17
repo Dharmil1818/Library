@@ -1,0 +1,9 @@
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\bin\Debug\netcoreapp2.2\BOL.deps.json
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\bin\Debug\netcoreapp2.2\BOL.dll
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\bin\Debug\netcoreapp2.2\BOL.pdb
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.AssemblyInfoInputs.cache
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.AssemblyInfo.cs
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.dll
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.pdb
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.csprojAssemblyReference.cache
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\BOL\obj\Debug\netcoreapp2.2\BOL.csproj.CoreCompileInputs.cache

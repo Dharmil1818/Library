@@ -1,0 +1,15 @@
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\DAL.deps.json
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\DAL.runtimeconfig.json
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\DAL.runtimeconfig.dev.json
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\DAL.dll
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\DAL.pdb
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\BOL.dll
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\bin\Debug\netcoreapp2.2\BOL.pdb
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.csprojAssemblyReference.cache
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.AssemblyInfoInputs.cache
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.AssemblyInfo.cs
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.csproj.CoreCompileInputs.cache
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.csproj.CopyComplete
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.dll
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.pdb
+C:\Users\Dhruvi\Desktop\LibraryPoject\Library\DAL\obj\Debug\netcoreapp2.2\DAL.genruntimeconfig.cache
