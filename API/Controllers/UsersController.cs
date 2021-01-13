@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using API.DTOS;
 using BOL;
 using DAL;
 using Microsoft.AspNetCore.Http;
@@ -15,30 +15,127 @@ namespace API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserDb _userDb;
+        private IUserRepository _userRepository;
+        private ICommentRepository _commentRepository;
 
-        public UsersController(UserDb userDb)
+        public UsersController(IUserRepository userRepository, ICommentRepository commentRepository)
         {
-            _userDb = userDb;
+            _userRepository = userRepository;
+            _commentRepository = commentRepository;
         }
 
+
+        //api/users
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
+        [ProducesResponseType(400)]
 
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public IActionResult GetUsers()
         {
-            
-            return Ok(await _userDb.GetALL());
-            
+            var users = _userRepository.GetUsers().ToList();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var usersDto = new List<UserDto>();
+
+            foreach(var user in users)
+            {
+                usersDto.Add(new UserDto
+                { 
+                     UserId = user.UserId,
+                     UserName = user.UserName,
+                     CreatedDate = user.CratedDate
+                });
+            }
+            return Ok(usersDto);
         }
 
-        [HttpGet("{username}")]
+        //api/users/userId
+        [HttpGet("{userId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200, Type = typeof(UserDto))]
 
-        public async Task<ActionResult <User>> GetUser(string username)
+        public IActionResult GetLocation(int userId)
         {
-            return await _userDb.GetbyUserName(username);
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
+            var user = _userRepository.GetUser(userId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userDto = new UserDto()
+            {
+                UserId = user.UserId,
+                UserName = user.UserName,
+                CreatedDate = user.CratedDate
+            };
+
+            return Ok(userDto);
+        } 
+
+        //api/users/userId/comments
+        [HttpGet("{userId}/comments")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CommentDto>))]
+        public IActionResult GetCommentsByUser(int userId)
+        {
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
+            var comments = _userRepository.GetCommentsByUser(userId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var commentsDto = new List<CommentDto>();
+
+            foreach(var comment in comments)
+            {
+                commentsDto.Add(new CommentDto
+                { 
+                CommentId = comment.CommentId,
+                Desscription = comment.Description,
+                CreatedDate = comment.CreatedDate,
+                ModifiedDate = comment.ModifiedDate
+                });
+            }
+
+            return Ok(commentsDto);
+        }
+        // TO DO- after implementing ICommentRepository
+        //api/users/commentId/user
+        [HttpGet("{commentId}/user")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200, Type = typeof(UserDto))]
+        public IActionResult GetUserOfAComment(int commentId)
+        {
+            if (!_commentRepository.CommentExists(commentId))
+                return NotFound();
+
+            var user = _userRepository.GetUserOfAComment(commentId);
+            
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var userDto = new UserDto()
+            {
+                UserId = user.UserId,
+                UserName = user.UserName,
+                CreatedDate = user.CratedDate
+            };
+            return Ok(userDto);
+
         }
 
-       
+
+
+
 
     }
 }

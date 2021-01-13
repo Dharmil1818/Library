@@ -19,8 +19,12 @@ namespace API
             services.AddMvc();
             //services.AddResponseCaching();
             services.AddDbContext<LibraryDbContext>();
-            services.AddTransient<BookDb>();
-            services.AddTransient<UserDb>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<IStatusRepository, StatusRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,6 +19,6 @@ namespace BOL
 
         public string LocationName { get; set; }
 
-        public Book Books { get; set; }
+        public IEnumerable<Book> Books { get; set; }
     }
 }

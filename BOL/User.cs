@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BOL
 {
     [Table("User")]
+
+
     public class User
     {
         [Key]

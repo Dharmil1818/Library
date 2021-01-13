@@ -16,13 +16,13 @@ namespace BOL
         
         public int BookId { get; set; }
 
-        public Book Books { get; set; }
+        public Book Book { get; set; }
         
         [ForeignKey("AuthorId")]
         
         public int AuthorId { get; set; }
 
-        public Author Authors { get; set; }
+        public Author Author { get; set; }
          
 
     }

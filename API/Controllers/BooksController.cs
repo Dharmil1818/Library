@@ -7,131 +7,274 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BOL;
 using DAL;
-using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookDb objbookDb;
+        private IBookRepository _bookRepository;
+        private ICommentRepository _commentRepository;
+        private IAuthorRepository _authorRepository;
 
-        public BooksController(BookDb objbookDb)
+        public BooksController(IBookRepository bookRepository, ICommentRepository commentRepository, IAuthorRepository authorRepository)
         {
-            this.objbookDb = objbookDb;
+            _bookRepository = bookRepository;
+            _commentRepository = commentRepository;
+            _authorRepository = authorRepository;
         }
 
-        //GET: api/Books
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        //GET: api/Books1
+       [HttpGet]
+        public ActionResult GetBooks()
         {
-            return Ok(await objbookDb.GetALL().ToListAsync());
+            return Ok(_bookRepository.GetBooks().ToList());
         }
-        //[HttpGet]
-        //public IActionResult GetALL()
-        //{
-        //    IList<Book> books = null;
-        //    using (var ctx = new LibraryDbContext())
-        //    {
-        //        books = ctx.Books.Include("Status")
-        //            .Select(s => new Book()
-        //            {
-        //                BookId = s.BookId,
-        //                Title = s.Title,
-        //                Statuses = s.Statuses,
-        //                Locations = s.Locations,
-        //            }).ToList<Book>();
 
-        //    }
-        //    if (books.Count == 0)
-        //    {
-        //        return NotFound();
-        //    }
+        //GET: api/Books1/5
+        [HttpGet("{bookId}")]
+        public ActionResult GetBook(int bookId)
+        {
+            var book = _bookRepository.GetBook(bookId);
 
-        //    return Ok(books);
+            if (book == null)
+            {
+                return NotFound();
+            }
 
-        //}
+            return Ok(book);
+        }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
-        //{
-        //    return Ok(await objbookDb.GetALL());
-        //}
+        //PUT: api/Books1/bookId?authorId=1&authorId=2
+       [HttpPut("{bookId}")]
+        public IActionResult UpdateBook(int bookId, [FromQuery] List<int> authorId, Book book)
+        {
+            if (bookId != book.BookId)
+            {
+                return BadRequest();
+            }
 
-        //// GET: api/Books/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Book>> GetBook(int id)
-        //{
-        //    var book = await BookDb.;
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
+            _bookRepository.UpdateBook(authorId, book);
 
-        //    return book;
-        //}
+            //UpdateBook(book).State = EntityState.Modified;
+            try
+            {
+                _bookRepository.Save();
+            }
+            catch (Exception)
+            {
+                if (!_bookRepository.BookExists(bookId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //// PUT: api/Books/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutBook(int id, Book book)
-        //{
-        //    if (id != book.BookId)
-        //    {
-        //        return BadRequest();
-        //    }
+            return NoContent();
+        }
 
-        //    _context.Entry(book).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!BookExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Books
+        // POST: api/Books1?authorId=1&authorId=2
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
+        public ActionResult CreateBook([FromQuery] List<int> authorId,[FromBody] Book book)
         {
-           await objbookDb.Create(book);
+            _bookRepository.CreateBook(authorId, book);
+            _bookRepository.Save();
             
 
-            return CreatedAtAction("GetBook", new { id = book.BookId }, book);
+            return CreatedAtAction("GetBook", new { bookId = book.BookId }, book);
         }
 
-        //// DELETE: api/Books/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Book>> DeleteBook(int id)
+        //DELETE: api/Books1/5
+        [HttpDelete("{bookId}")]
+        public IActionResult DeleteBook(int bookId)
+        {
+            //var comments = _commentRepository.GetCommnnetsOfABook(bookId);
+            var book = _bookRepository.GetBook(bookId);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _bookRepository.DeleteBook(book);
+            _bookRepository.Save();
+
+            return NoContent();
+        }
+
+        //private bool BookExists(int bookId)
         //{
-        //    var book = await _context.Books.FindAsync(id);
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Books.Remove(book);
-        //    await _context.SaveChangesAsync();
-
-        //    return book;
-        //}
-
-        //private bool BookExists(int id)
-        //{
-        //    return _context.Books.Any(e => e.BookId == id);
+        //    return _bookRepository.Books.Any(e => e.BookId == bookId);
         //}
     }
 }
+
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using BOL;
+//using DAL;
+//using Microsoft.AspNetCore.Authorization;
+//using API.DTOS;
+
+//namespace API.Controllers
+//{
+
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class BooksController : ControllerBase
+//    {
+//        private IBookRepository _bookRepository;
+//        private IAuthorRepository _authorRepository;
+//        private ICommentRepository _commentRepository;
+
+//        public BooksController(IBookRepository bookRepository, IAuthorRepository authorRepository, ICommentRepository commentRepository)
+//        {
+//            _bookRepository = bookRepository;
+//            _authorRepository = authorRepository;
+//            _commentRepository = commentRepository;
+//        }
+
+//        //api/books
+//        [HttpGet]
+//        [ProducesResponseType(400)]
+//        [ProducesResponseType(200, Type = typeof(IEnumerable<BookDto>))]
+
+//        public IActionResult GetBooks()
+//        {
+//            var books = _bookRepository.GetBooks().ToList();
+
+//            if (!ModelState.IsValid)
+//                return BadRequest(ModelState);
+
+//            var booksDto = new List<BookDto>();
+
+//            foreach (var book in books)
+//            {
+//                booksDto.Add(new BookDto
+//                {
+//                    BookId = book.BookId,
+//                    Title = book.Title,
+//                    CheckOutDate = book.CheckOutDate
+//                });
+//            }
+//            return Ok(booksDto);
+
+//        }
+
+//        //api/books/bookId
+//        [HttpGet("{bookId}", Name = "GetBook")]
+//        [ProducesResponseType(200, Type = typeof(BookDto))]
+//        [ProducesResponseType(400)]
+//        [ProducesResponseType(404)]
+
+//        public IActionResult GetBook(int bookId)
+//        {
+//            if (!_bookRepository.BookExists(bookId))
+//                return NotFound();
+
+//            var book = _bookRepository.GetBook(bookId);
+
+//            if (!ModelState.IsValid)
+//                return BadRequest(ModelState);
+
+//            var bookDto = new BookDto()
+//            {
+//                BookId = book.BookId,
+//                Title = book.Title
+//                //CheckOutDate = book.CheckOutDate
+//            };
+
+//            return Ok(bookDto);
+//        }
+
+//        //api/books?authId=1&authId=2
+//        [HttpPost]
+//        [ProducesResponseType(201, Type = typeof(BookDto))]
+//        [ProducesResponseType(400)]
+//        [ProducesResponseType(404)]
+//        [ProducesResponseType(422)]
+//        [ProducesResponseType(500)]
+
+//        public IActionResult CreateBook([FromQuery] List<int> authId, [FromBody] Book bookToCreate)
+//        {
+//            var statusCode = ValidateBook(authId, bookToCreate);
+
+//            if (!ModelState.IsValid)
+//                return StatusCode(statusCode.StatusCode);
+
+//            if (!_bookRepository.CreateBook(authId, bookToCreate))
+//            {
+//                ModelState.AddModelError("", $"Something went wrong saving the book" +
+//                    $"{bookToCreate.Title}");
+//                return StatusCode(500, ModelState);
+//            }
+//            return CreatedAtRoute("GetBook", new { bookId = bookToCreate.BookId }, bookToCreate);
+//        }
+
+//        //api/books/bookId?authId=1&authId=2
+//        [HttpPut("{bookId}")]
+//        [ProducesResponseType(204)]
+//        [ProducesResponseType(400)]
+//        [ProducesResponseType(404)]
+//        [ProducesResponseType(422)]
+//        [ProducesResponseType(500)]
+
+//        public IActionResult UpdateBook(int bookId, [FromQuery] List<int> authId, [FromBody] Book bookToUpdate)
+//        {
+//            var statusCode = ValidateBook(authId, bookToUpdate);
+
+//            if (bookId != bookToUpdate.BookId)
+//                return BadRequest();
+
+//            if (!_bookRepository.BookExists(bookId))
+//                return NotFound();
+
+//            if (!ModelState.IsValid)
+//                return StatusCode(statusCode.StatusCode);
+
+//            if (!_bookRepository.UpdateBook(authId, bookToUpdate))
+//            {
+//                ModelState.AddModelError("", $"Something went wrong saving the book" +
+//                    $"{bookToUpdate.Title}");
+//                return StatusCode(500, ModelState);
+//            }
+//            return NoContent();
+//        }
+
+
+//        private StatusCodeResult ValidateBook(List<int> authId, Book book)
+//        {
+//            if (book == null || authId.Count <= 0)
+//            {
+//                ModelState.AddModelError("", "Missing Book or Author");
+//                return BadRequest();
+//            }
+
+//            foreach (var id in authId)
+//            {
+//                if (!_authorRepository.AuthorExists(id))
+//                {
+//                    ModelState.AddModelError("", "Author Not Found");
+//                    return StatusCode(404);
+//                }
+
+//            }
+//            if (!ModelState.IsValid)
+//            {
+//                ModelState.AddModelError("", "Critical Error");
+//                return BadRequest();
+//            }
+//            return NoContent();
+//        }
+
+//    }
+//}
+

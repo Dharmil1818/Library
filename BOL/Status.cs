@@ -18,6 +18,6 @@ namespace BOL
 
         public string StatusName { get; set; }
 
-        public Book Books { get; set; }
+        public IEnumerable<Book> Books { get; set; }
     }
 }
