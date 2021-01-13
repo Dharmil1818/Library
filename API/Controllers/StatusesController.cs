@@ -129,12 +129,12 @@ namespace API.Controllers
             return Ok(booksDto);
         }
         //Post: api/statuses
-        [HttpPost]
+        //[HttpPost]
         
-        public IActionResult CreateStatus([FromBody]Status statuscreate)
-        {
-            _statusRepository.
-        }
+        //public IActionResult CreateStatus([FromBody]Status statuscreate)
+        //{
+        //    _statusRepository.
+        //}
 
     }
 }
